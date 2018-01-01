@@ -7,6 +7,6 @@
 
 This work is **no way** affiliated with LINE Corporation or Naver. These files are the results of research into the LINE Messaging protocol.
 
-## Author
+## Special Thanks
 - Matti Virkkunen / [@mvirkkunen](https://github.com/mvirkkunen)
-- Fadhiil Rachman / [@fadhiilrachman](https://www.instagram.com/fadhiilrachman)
+- GoogleX133 / [@GoogleX133](https://github.com/GoogleX133/LINE-Source)
