@@ -1074,6 +1074,10 @@ struct Contact {
     35: i32 attributes;
     36: i64 settings;
     37: string picturePath;
+    38: string recommendParams;
+    39: i32 friendRequestStatus;
+    40: string musicProfile;
+    42: string videoProfile;
 }
 
 struct BuddyList {
@@ -1414,7 +1418,7 @@ struct LoginSession {
 }
 
 struct Message {
-    1: string from_;
+    1: string _from;
     2: string to;
     3: MIDType toType;
     4: string id;
@@ -1459,7 +1463,7 @@ struct MetaProfile {
 
 struct NotificationItem {
     1: string id;
-    2: string from_;
+    2: string _from;
     3: string to;
     4: string fromChannel;
     5: string toChannel;
