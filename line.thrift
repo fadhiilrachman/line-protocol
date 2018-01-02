@@ -1580,6 +1580,7 @@ struct Profile {
     31: bool allowSearchByUserid;
     32: bool allowSearchByEmail;
     33: string picturePath;
+    34: string musicProfile;
 }
 
 struct ProximityMatchCandidateResult {
