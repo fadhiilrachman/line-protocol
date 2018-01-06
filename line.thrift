@@ -999,11 +999,6 @@ enum SquareType {
     OPEN = 1;
 }
 
-enum SquareType {
-    CLOSED = 0;
-    OPEN = 1;
-}
-
 enum SquareChatType {
     OPEN = 1;
     SECRET = 2;
@@ -1437,7 +1432,7 @@ struct Group {
     10: string name;
     11: string pictureStatus;
     12: bool preventedJoinByTicket;
-    12: GroupPreference groupPreference;
+    13: GroupPreference groupPreference;
     20: list<Contact> members;
     21: Contact creator;
     22: list<Contact> invitee;
