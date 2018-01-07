@@ -2010,12 +2010,6 @@ struct FindSquareByInvitationTicketRequest {
     2: string invitationTicket;
 }
 
-struct GetSquareCategoriesResponse {
-    1: list<Category> categoryList;
-}
-
-struct GetSquareCategoriesRequest {}
-
 struct SquareEventReceiveMessage {
     1: string squareChatMid;
     2: SquareMessage squareMessage;
@@ -2335,8 +2329,6 @@ service SquareService {
     FindSquareByInvitationTicketResponse findSquareByInvitationTicket(
     1: FindSquareByInvitationTicketRequest request) throws(1: SquareException e);
     
-    GetSquareCategoriesResponse getCategories(
-    1: GetSquareCategoriesRequest request) throws(1: SquareException e);
 }
 
 service AccountSupervisorService {
@@ -2971,12 +2963,8 @@ service TalkService {
 
     void acceptGroupInvitationByTicket(
         1: i32 reqSeq,
-        2: string groupId,
+        2: string GroupMid,
         3: string ticketId
-    ) throws(1: TalkException e);
-
-    void findGroupByTicket(
-        1: string ticketId
     ) throws(1: TalkException e);
 
     void acceptProximityMatches(
@@ -3296,7 +3284,11 @@ service TalkService {
         3: list<string> contactIds) throws(1: TalkException e);
 
     string reissueGroupTicket(
-       1: string groupId 
+       1: string groupMid 
+    ) throws(1: TalkException e);
+
+    Group findGroupByTicket(
+        1: string ticketId
     ) throws(1: TalkException e);
 
     void leaveGroup(
