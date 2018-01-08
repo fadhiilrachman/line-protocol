@@ -9,4 +9,5 @@ This work is **no way** affiliated with LINE Corporation or Naver. These files a
 
 ## Special Thanks
 - Matti Virkkunen / [@mvirkkunen](https://github.com/mvirkkunen)
+- ぐるぐる / [@f0reachARR](https://github.com/f0reachARR)
 - GoogleX133 / [@GoogleX133](https://github.com/GoogleX133)
