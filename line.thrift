@@ -353,25 +353,6 @@ enum ContentType {
     EXTIMAGE = 21;
 }
 
-struct MessageBoxV2MessageId {
-    1: i64 deliveredTime;
-    2: i64 messageId;
-}
-
-struct MessageCommitResult {
-    1: string requestId;
-    2: BuddyResultState state;
-    3: string messageStoreRequestId;
-    4: list<string> messageIds;
-    11: i64 receiverCount;
-    12: i64 successCount;
-    13: i64 failCount;
-    14: i64 blockCount;
-    15: i64 unregisteredCount;
-    16: i64 unrelatedCount;
-    21: string errorDescription;
-}
-
 enum MessageRelationType {
     FORWARD = 0;
     AUTO_REPLY = 1;
@@ -1188,6 +1169,39 @@ enum SquareEventStatus {
     ALERT_DISABLED = 2;
 }
 
+struct Location {
+    1: string title;
+    2: string address;
+    3: double latitude;
+    4: double longitude;
+    5: string phone;
+}
+
+struct MessageBoxV2MessageId {
+    1: i64 deliveredTime;
+    2: i64 messageId;
+}
+
+struct MessageCommitResult {
+    1: string requestId;
+    2: BuddyResultState state;
+    3: string messageStoreRequestId;
+    4: list<string> messageIds;
+    11: i64 receiverCount;
+    12: i64 successCount;
+    13: i64 failCount;
+    14: i64 blockCount;
+    15: i64 unregisteredCount;
+    16: i64 unrelatedCount;
+    21: string errorDescription;
+}
+
+struct CallHost {
+    1: string host;
+    2: i32 port;
+    3: string zone;
+}
+
 struct AgeCheckDocomoResult {
     1: string authUrl;
     2: UserAgeType userAgeType;
@@ -1229,11 +1243,6 @@ struct ChannelProvider {
     1: string name;
 }
 
-struct E2EENegotiationResult {
-    1: set<ContentType> allowedTypes;
-    2: E2EEPublicKey publicKey;
-}
-
 struct E2EEPublicKey {
     1: i32 version;
     2: i32 keyId;
@@ -1241,9 +1250,106 @@ struct E2EEPublicKey {
     5: i64 createdTime;
 }
 
+struct ChannelDomain {
+    1: string host;
+    2: bool removed;
+}
+
+struct E2EENegotiationResult {
+    1: set<ContentType> allowedTypes;
+    2: E2EEPublicKey publicKey;
+}
+
 struct OTPResult {
     1: string otpId;
     2: string otp;
+}
+
+struct Square {
+    1: string mid;
+    2: string name;
+    3: string welcomeMessage;
+    4: string profileImageObsHash;
+    5: string desc;
+    6: bool searchable;
+    7: SquareType type;
+    8: i32 categoryID;
+    9: string invitationURL;
+    10: i64 revision;
+    11: bool ableToUseInvitationTicket;
+    12: SquareChatState state;
+}
+
+struct SquareAuthority {
+    1: string squareMid;
+    2: SquareMemberRole updateSquareProfile;
+    3: SquareMemberRole inviteNewMember;
+    4: SquareMemberRole approveJoinRequest;
+    5: SquareMemberRole createPost;
+    6: SquareMemberRole createOpenSquareChat;
+    7: SquareMemberRole deleteSquareChatOrPost;
+    8: SquareMemberRole removeSquareMember;
+    9: SquareMemberRole grantRole;
+    10: SquareMemberRole enableInvitationTicket;
+    11: i64 revision;
+}
+
+struct SquarePreference {
+    1: i64 favoriteTimestamp;
+    2: bool notiForNewJoinRequest;
+}
+
+struct SquareMember {
+    1: string squareMemberMid;
+    2: string squareMid;
+    3: string displayName;
+    4: string profileImageObsHash;
+    5: bool ableToReceiveMessage;
+    7: SquareMembershipState membershipState;
+    8: SquareMemberRole role;
+    9: i64 revision;
+    10: SquarePreference preference;
+    11: string joinMessage;
+}
+
+struct SquareMemberRelation {
+    1: SquareMemberRelationState state;
+    2: i64 revision;
+}
+
+struct SquareFeature {
+    1: SquareFeatureControlState controlState;
+    2: BooleanState booleanValue;
+}
+
+struct SquareFeatureSet {
+    1: string squareMid;
+    2: i64 revision;
+    11: SquareFeature creatingSecretSquareChat;
+    12: SquareFeature invitingIntoOpenSquareChat;
+}
+
+struct SquareStatus {
+    1: i32 memberCount;
+    2: i32 joinRequestCount;
+    3: i64 lastJoinRequestAt;
+    4: i32 openChatCount;
+}
+
+struct SquareChat {
+    1: string squareChatMid;
+    2: string squareMid;
+    3: SquareChatType type;
+    4: string name;
+    5: string chatImageObsHash;
+    6: i64 squareChatRevision;
+    7: i32 maxMemberCount;
+    8: SquareChatState state;
+}
+
+struct NoteStatus {
+    1: i32 noteCount;
+    2: i64 latestCreatedAt;
 }
 
 struct PaidCallAdCountry {
@@ -1480,14 +1586,6 @@ struct BuddyList {
     4: list<Contact> popularContacts;
 }
 
-struct Location {
-    1: string title;
-    2: string address;
-    3: double latitude;
-    4: double longitude;
-    5: string phone;
-}
-
 struct RegisterWithPhoneNumberResult {
     1: string authToken;
     2: bool recommendEmailRegistration;
@@ -1535,11 +1633,6 @@ struct BuddySearchResult {
     4: string picturePath;
     5: string statusMessage;
     6: bool businessAccount;
-}
-
-struct ChannelDomain {
-    1: string host;
-    2: bool removed;
 }
 
 struct SyncParamMid {
@@ -1854,6 +1947,16 @@ struct LastReadMessageIds {
     2: list<LastReadMessageId> lastReadMessageIds;
 }
 
+struct VerificationSessionData {
+    1: string sessionId;
+    2: VerificationMethod method;
+    3: string callback;
+    4: string normalizedPhone;
+    5: string countryCode;
+    6: string nationalSignificantNumber;
+    7: list<VerificationMethod> availableVerificationMethods;
+}
+
 struct LoginResult {
     1: string authToken;
     2: string certificate;
@@ -1906,6 +2009,31 @@ struct Message {
     22: MessageRelationType messageRelationType;
     23: i64 readCount;
     24: ServiceCode relatedMessageServiceCode;
+}
+
+struct SquareMessage {
+    1: Message message;
+    3: MIDType fromType;
+    4: i64 squareMessageRevision;
+}
+
+struct SquareChatStatusWithoutMessage {
+    1: i32 memberCount;
+    2: i32 unreadMessageCount;
+}
+
+struct SquareChatStatus {
+    3: SquareMessage lastMessage;
+    4: string senderDisplayName;
+    5: SquareChatStatusWithoutMessage otherStatus;
+}
+
+struct SquareChatMember {
+    1: string squareMemberMid;
+    2: string squareChatMid;
+    3: i64 revision;
+    4: SquareChatMembershipState membershipState;
+    5: bool notificationForMessage;
 }
 
 struct MessageOperation {
@@ -2107,6 +2235,21 @@ struct SuggestDictionary {
     2: string name;
 }
 
+struct SuggestItemDictionaryIncrement {
+    1: SuggestDictionaryIncrementStatus status;
+    2: i64 revision;
+    3: string scheme;
+    4: binary data;
+}
+
+struct SuggestTagDictionaryIncrement {
+    1: SuggestDictionaryIncrementStatus status;
+    2: string language;
+    3: i64 revision;
+    4: string scheme;
+    5: binary data;
+}
+
 struct SuggestDictionaryIncrements {
     1: SuggestItemDictionaryIncrement itemIncrement;
     2: list<SuggestTagDictionaryIncrement> tagIncrements;
@@ -2122,6 +2265,17 @@ enum SuggestDictionaryIncrementStatus {
     TOO_OLD_DATA = 6,
 }
 
+struct SuggestItemDictionaryRevision {
+    1: i64 revision;
+    2: string scheme;
+}
+
+struct SuggestTagDictionaryRevision {
+    1: string language;
+    2: i64 revision;
+    3: string scheme;
+}
+
 struct SuggestDictionaryRevisions {
     1: SuggestItemDictionaryRevision itemRevision;
     2: list<SuggestTagDictionaryRevision> tagRevisions;
@@ -2132,32 +2286,6 @@ struct SuggestDictionarySettings {
     2: i64 newRevision;
     3: list<SuggestDictionary> dictionaries;
     4: list<string> preloadedDictionaries;
-}
-
-struct SuggestItemDictionaryIncrement {
-    1: SuggestDictionaryIncrementStatus status;
-    2: i64 revision;
-    3: string scheme;
-    4: binary data;
-}
-
-struct SuggestItemDictionaryRevision {
-    1: i64 revision;
-    2: string scheme;
-}
-
-struct SuggestTagDictionaryIncrement {
-    1: SuggestDictionaryIncrementStatus status;
-    2: string language;
-    3: i64 revision;
-    4: string scheme;
-    5: binary data;
-}
-
-struct SuggestTagDictionaryRevision {
-    1: string language;
-    2: i64 revision;
-    3: string scheme;
 }
 
 struct PhoneInfoForChannel {
@@ -2344,16 +2472,16 @@ struct TMessageBoxWrapUpResponse {
     2: i32 totalSize;
 }
 
-struct TMessageReadRange {
-    1: string chatId;
-    2: map<string, list<TMessageReadRangeEntry>> ranges;
-}
-
 struct TMessageReadRangeEntry {
     1: i64 startMessageId;
     2: i64 endMessageId;
     3: i64 startTime;
     4: i64 endTime;
+}
+
+struct TMessageReadRange {
+    1: string chatId;
+    2: map<string, list<TMessageReadRangeEntry>> ranges;
 }
 
 struct ErrorExtraInfo {
@@ -2375,40 +2503,6 @@ struct SyncScope {
     11: SyncRelations group;
     12: SyncRelations room;
     13: SyncRelations chat;
-}
-
-struct SquarePreference {
-    1: i64 favoriteTimestamp;
-    2: bool notiForNewJoinRequest;
-}
-
-struct SquareStatus {
-    1: i32 memberCount;
-    2: i32 joinRequestCount;
-    3: i64 lastJoinRequestAt;
-    4: i32 openChatCount;
-}
-
-struct SquareChat {
-    1: string squareChatMid;
-    2: string squareMid;
-    3: SquareChatType type;
-    4: string name;
-    5: string chatImageObsHash;
-    6: i64 squareChatRevision;
-    7: i32 maxMemberCount;
-    8: SquareChatState state;
-}
-
-struct SquareMessage {
-    1: Message message;
-    3: MIDType fromType;
-    4: i64 squareMessageRevision;
-}
-
-struct NoteStatus {
-    1: i32 noteCount;
-    2: i64 latestCreatedAt;
 }
 
 struct JoinSquareResponse {
@@ -2445,40 +2539,6 @@ struct SendMessageRequest {
     3: SquareMessage squareMessage;
 }
 
-struct SquareChatStatusWithoutMessage {
-    1: i32 memberCount;
-    2: i32 unreadMessageCount;
-}
-
-struct SquareChatStatus {
-    3: SquareMessage lastMessage;
-    4: string senderDisplayName;
-    5: SquareChatStatusWithoutMessage otherStatus;
-}
-
-struct SquareChatMember {
-    1: string squareMemberMid;
-    2: string squareChatMid;
-    3: i64 revision;
-    4: SquareChatMembershipState membershipState;
-    5: bool notificationForMessage;
-}
-
-struct Square {
-    1: string mid;
-    2: string name;
-    3: string welcomeMessage;
-    4: string profileImageObsHash;
-    5: string desc;
-    6: bool searchable;
-    7: SquareType type;
-    8: i32 categoryID;
-    9: string invitationURL;
-    10: i64 revision;
-    11: bool ableToUseInvitationTicket;
-    12: SquareChatState state;
-}
-
 struct MarkAsReadRequest {
     2: string squareChatMid;
     4: string messageId;
@@ -2486,50 +2546,6 @@ struct MarkAsReadRequest {
 
 struct MarkAsReadResponse {
     
-}
-
-struct SquareMember {
-    1: string squareMemberMid;
-    2: string squareMid;
-    3: string displayName;
-    4: string profileImageObsHash;
-    5: bool ableToReceiveMessage;
-    7: SquareMembershipState membershipState;
-    8: SquareMemberRole role;
-    9: i64 revision;
-    10: SquarePreference preference;
-    11: string joinMessage;
-}
-
-struct SquareMemberRelation {
-    1: SquareMemberRelationState state;
-    2: i64 revision;
-}
-
-struct SquareAuthority {
-    1: string squareMid;
-    2: SquareMemberRole updateSquareProfile;
-    3: SquareMemberRole inviteNewMember;
-    4: SquareMemberRole approveJoinRequest;
-    5: SquareMemberRole createPost;
-    6: SquareMemberRole createOpenSquareChat;
-    7: SquareMemberRole deleteSquareChatOrPost;
-    8: SquareMemberRole removeSquareMember;
-    9: SquareMemberRole grantRole;
-    10: SquareMemberRole enableInvitationTicket;
-    11: i64 revision;
-}
-
-struct SquareFeature {
-    1: SquareFeatureControlState controlState;
-    2: BooleanState booleanValue;
-}
-
-struct SquareFeatureSet {
-    1: string squareMid;
-    2: i64 revision;
-    11: SquareFeature creatingSecretSquareChat;
-    12: SquareFeature invitingIntoOpenSquareChat;
 }
 
 struct SubscriptionState {
@@ -2665,28 +2681,6 @@ struct GetInvitationTicketUrlResponse {
     1: string invitationURL;
 }
 
-struct FetchMyEventsRequest {
-    1: i64 subscriptionId;
-    2: string syncToken;
-    3: i32 limit;
-    4: string continuationToken;
-}
-
-struct FetchMyEventsResponse {
-    1: SubscriptionState subscription;
-    2: list<SquareEvent> events;
-    3: string syncToken;
-    4: string continuationToken;
-}
-
-struct FetchSquareChatEventsRequest {
-    1: i64 subscriptionId;
-    2: string squareChatMid;
-    3: string syncToken;
-    4: i32 limit;
-    5: FetchDirection direction;
-}
-
 struct LeaveSquareRequest {
     2: string squareMid;
 }
@@ -2727,13 +2721,6 @@ struct SearchSquareMembersResponse {
     2: i64 revision;
     3: string continuationToken;
     4: i32 totalCount;
-}
-
-struct FetchSquareChatEventsResponse {
-    1: SubscriptionState subscription;
-    2: list<SquareEvent> events;
-    3: string syncToken;
-    4: string continuationToken;
 }
 
 struct FindSquareByInvitationTicketResponse {
@@ -2958,6 +2945,35 @@ struct SquareEvent {
     6: SquareEventStatus eventStatus;
 }
 
+struct FetchMyEventsRequest {
+    1: i64 subscriptionId;
+    2: string syncToken;
+    3: i32 limit;
+    4: string continuationToken;
+}
+
+struct FetchMyEventsResponse {
+    1: SubscriptionState subscription;
+    2: list<SquareEvent> events;
+    3: string syncToken;
+    4: string continuationToken;
+}
+
+struct FetchSquareChatEventsRequest {
+    1: i64 subscriptionId;
+    2: string squareChatMid;
+    3: string syncToken;
+    4: i32 limit;
+    5: FetchDirection direction;
+}
+
+struct FetchSquareChatEventsResponse {
+    1: SubscriptionState subscription;
+    2: list<SquareEvent> events;
+    3: string syncToken;
+    4: string continuationToken;
+}
+
 struct InviteToSquareRequest {
     2: string squareMid;
     3: list<string> invitees;
@@ -3078,27 +3094,11 @@ struct UserAuthStatus {
     2: list<SnsIdType> registeredSnsIdTypes;
 }
 
-struct VerificationSessionData {
-    1: string sessionId;
-    2: VerificationMethod method;
-    3: string callback;
-    4: string normalizedPhone;
-    5: string countryCode;
-    6: string nationalSignificantNumber;
-    7: list<VerificationMethod> availableVerificationMethods;
-}
-
 struct WapInvitation {
     1: WapInvitationType type;
     10: string inviteeEmail;
     11: string inviterMid;
     12: string roomMid;
-}
-
-struct CallHost {
-    1: string host;
-    2: i32 port;
-    3: string zone;
 }
 
 struct GroupCall {
