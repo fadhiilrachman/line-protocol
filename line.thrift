@@ -114,21 +114,8 @@ enum ApplicationType {
     CLOVAFRIENDS_ALPHA = 483;
 }
 
-struct ExtendedProfile {
-    1: ExtendedProfileBirthday birthday;
-}
-
 enum ExtendedProfileAttribute {
     # Error? ExtendedProfileAttribute.java
-}
-
-struct ExtendedProfileBirthday {
-    1: string year;
-    2: PrivacyLevelType yearPrivacyLevelType;
-    3: bool yearEnabled;
-    5: string day;
-    6: PrivacyLevelType dayPrivacyLevelType;
-    7: bool dayEnabled;
 }
 
 enum PrivacyLevelType {
@@ -1288,6 +1275,19 @@ struct PaidCallCurrencyExchangeRate {
     4: bool preferred;
     5: string coinRate;
     6: string creditRate;
+}
+
+struct ExtendedProfileBirthday {
+    1: string year;
+    2: PrivacyLevelType yearPrivacyLevelType;
+    3: bool yearEnabled;
+    5: string day;
+    6: PrivacyLevelType dayPrivacyLevelType;
+    7: bool dayEnabled;
+}
+
+struct ExtendedProfile {
+    1: ExtendedProfileBirthday birthday;
 }
 
 struct PaidCallDialing {
