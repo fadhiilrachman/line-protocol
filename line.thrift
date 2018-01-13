@@ -2496,6 +2496,14 @@ struct ChatRoomAnnouncementContents {
     4: string thumbnail;
 }
 
+struct ChatRoomAnnouncement {
+    1: i64 announcementSeq;
+    2: ChatRoomAnnouncementType type;
+    3: ChatRoomAnnouncementContents contents;
+    4: string creatorMid;
+    5: i64 createdTime;
+}
+
 struct ErrorExtraInfo {
     1: PreconditionFailedExtraInfo preconditionFailedExtraInfo;
 }
