@@ -3783,11 +3783,26 @@ service SnsAdaptorService {
 
 service TalkService {
 
-    ChatRoomAnnouncement createChatRoomAnnouncement (
+    map<string, list<ChatRoomAnnouncement>> getChatRoomAnnouncementsBulk(
+        2: list<string> chatRoomMids) throws (1: TalkException e);
+
+    list<ChatRoomAnnouncement> getChatRoomAnnouncements(
+        2: string chatRoomMid) throws (1: TalkException e);
+
+    ChatRoomAnnouncement createChatRoomAnnouncement(
         1: i32 reqSeq,
         2: string chatRoomMid,
         3: ChatRoomAnnouncementType type,
         4: ChatRoomAnnouncementContents contents) throws (1: TalkException e);
+
+    void removeChatRoomAnnouncement(
+        1: i32 reqSeq,
+        2: string chatRoomMid,
+        3: i64 announcementSeq) throws (1: TalkException e);
+
+    void unsendMessage(
+        1: i32 seq,
+        2: string messageId) throws (1: TalkException e);
 
     void acceptGroupInvitation(
         1: i32 reqSeq,
@@ -3796,8 +3811,7 @@ service TalkService {
     void acceptGroupInvitationByTicket(
         1: i32 reqSeq,
         2: string GroupMid,
-        3: string ticketId
-    ) throws(1: TalkException e);
+        3: string ticketId) throws(1: TalkException e);
 
     void acceptProximityMatches(
         2: string sessionId,
