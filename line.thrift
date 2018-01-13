@@ -3804,6 +3804,21 @@ service TalkService {
         1: i32 seq,
         2: string messageId) throws (1: TalkException e);
 
+    Group getGroupWithoutMembers(
+        2: string groupId) throws (1: TalkException e);
+
+    void requestResendMessage(
+        1: i32 reqSeq,
+        2: string senderMid,
+        3: string messageId) throws (1: TalkException e);
+
+    void respondResendMessage(
+        1: i32 reqSeq,
+        2: string receiverMid,
+        3: string originalMessageId,
+        4: Message resendMessage,
+        5: ErrorCode errorCode) throws (1: TalkException e);
+
     void acceptGroupInvitation(
         1: i32 reqSeq,
         2: string groupId) throws(1: TalkException e);
