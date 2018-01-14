@@ -3367,6 +3367,19 @@ struct ReportSquareMemberResponse {
     
 }
 
+struct GetSquareRequest {
+    2: string mid;
+}
+
+struct GetSquareResponse {
+    1: Square square;
+    2: SquareMember myMembership;
+    3: SquareAuthority squareAuthority;
+    4: SquareStatus squareStatus;
+    5: SquareFeatureSet squareFeatureSet;
+    6: NoteStatus noteStatus;
+}
+
 struct GetSquareStatusRequest {
     2: string squareMid;
 }
@@ -5521,9 +5534,9 @@ service SquareService {
     
     GetSquareChatResponse getSquareChat(
         1: GetSquareChatRequest request) throws(1: SquareException e);
-    
-    Square getSquare(
-        2: string mid) throws(1: SquareException e);
+
+    GetSquareResponse getSquare(
+        1: GetSquareRequest request) throws(1: SquareException e);
 
     GetJoinedSquaresResponse getJoinedSquares(
         1: GetJoinedSquaresRequest request) throws(1: SquareException e);
