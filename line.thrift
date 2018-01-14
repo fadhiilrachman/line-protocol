@@ -3411,6 +3411,18 @@ struct GetSquareChatAnnouncementsResponse {
     1: list<SquareChatAnnouncement> announcements;
 }
 
+struct GetJoinedSquareChatsRequest {
+    2: string continuationToken;
+    3: i32 limit;
+}
+
+struct GetJoinedSquareChatsResponse {
+    1: list<SquareChat> chats;
+    2: map<string, SquareChatMember> chatMembers;
+    3: map<string, SquareChatStatus> statuses;
+    4: string continuationToken;
+}
+
 exception TalkException {
     1: ErrorCode code;
     2: string reason;
@@ -5380,18 +5392,6 @@ service AuthService {
         6: binary encryptedKeyChain,
         7: binary hashKeyChain) throws (1: TalkException e);
 
-}
-
-struct GetJoinedSquareChatsRequest {
-    2: string continuationToken;
-    3: i32 limit;
-}
-
-struct GetJoinedSquareChatsResponse {
-    1: list<SquareChat> chats;
-    2: map<string, SquareChatMember> chatMembers;
-    3: map<string, SquareChatStatus> statuses;
-    4: string continuationToken;
 }
 
 service SquareService {
