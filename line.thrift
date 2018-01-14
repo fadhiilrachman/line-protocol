@@ -177,6 +177,13 @@ enum Diff {
     REMOVED = 2;
 }
 
+enum ReportType {
+    ADVERTISING = 1;
+    GENDER_HARASSMENT = 2;
+    HARASSMENT = 3;
+    OTHER = 4;
+}
+
 enum SyncTriggerReason {
     OTHER = 0;
     REVISION_GAP_TOO_LARGE = 1;
@@ -410,6 +417,42 @@ enum EmailConfirmationType {
 
 enum SquareChatAnnouncementType {
     TEXT_MESSAGE = 0;
+}
+
+enum SquareChatAttribute {
+    NAME = 2;
+    SQUARE_CHAT_IMAGE = 3;
+    STATE = 4;
+}
+
+enum SquareMemberAttribute {
+    DISPLAY_NAME = 1;
+    PROFILE_IMAGE = 2;
+    ABLE_TO_RECEIVE_MESSAGE = 3;
+    MEMBERSHIP_STATE = 5;
+    ROLE = 6;
+    PREFERENCE = 7;
+}
+
+enum SquareMemberRelationAttribute {
+    BLOCKED = 1;
+}
+
+enum SquarePreferenceAttribute {
+    FAVORITE = 1;
+    NOTI_FOR_NEW_JOIN_REQUEST = 2;
+}
+
+enum SquareState {
+    ALIVE = 0;
+    DELETED = 1;
+    SUSPENDED = 2;
+}
+
+enum CommitMessageResultCode {
+    DELIVERED = 0,
+    DELIVERY_SKIPPED = 1,
+    DELIVERY_RESTRICTED = 2,
 }
 
 enum ErrorCode {
@@ -697,13 +740,13 @@ enum OpType {
     SEND_MESSAGE_RECEIPT = 27;
     RECEIVE_MESSAGE_RECEIPT = 28;
     SEND_CONTENT_RECEIPT = 29;
-    SEND_CHAT_CHECKED = 40;
-    SEND_CHAT_REMOVED = 41;
     RECEIVE_ANNOUNCEMENT = 30;
+    NOTIFIED_UNREGISTER_USER = 33;
     INVITE_VIA_EMAIL = 38;
     NOTIFIED_REGISTER_USER = 37;
-    NOTIFIED_UNREGISTER_USER = 33;
     NOTIFIED_REQUEST_RECOVERY = 39;
+    SEND_CHAT_CHECKED = 40;
+    SEND_CHAT_REMOVED = 41;
     NOTIFIED_FORCE_SYNC = 42;
     SEND_CONTENT = 43;
     SEND_MESSAGE_MYHOME = 44;
@@ -719,8 +762,8 @@ enum OpType {
     FAILED_SEND_MESSAGE = 54;
     NOTIFIED_READ_MESSAGE = 55;
     FAILED_EMAIL_CONFIRMATION = 56;
-    NOTIFIED_PUSH_NOTICENTER_ITEM = 59;
     NOTIFIED_CHAT_CONTENT = 58;
+    NOTIFIED_PUSH_NOTICENTER_ITEM = 59;
     NOTIFIED_JOIN_CHAT = 60;
     NOTIFIED_LEAVE_CHAT = 61;
     NOTIFIED_TYPING = 62;
@@ -1083,6 +1126,9 @@ enum SquareEventType {
     NOTIFIED_DELETE_SQUARE_CHAT = 20;
     NOTIFIED_UPDATE_SQUARE_CHAT_PROFILE_NAME = 30;
     NOTIFIED_UPDATE_SQUARE_CHAT_PROFILE_IMAGE = 31;
+    NOTIFIED_UPDATE_SQUARE_CHAT_ANNOUNCEMENT = 37;
+    NOTIFIED_ADD_BOT = 33;
+    NOTIFIED_REMOVE_BOT = 34;
     NOTIFIED_UPDATE_SQUARE = 8;
     NOTIFIED_UPDATE_SQUARE_STATUS = 9;
     NOTIFIED_UPDATE_SQUARE_AUTHORITY = 10;
@@ -1094,6 +1140,7 @@ enum SquareEventType {
     NOTIFIED_CREATE_SQUARE_CHAT_MEMBER = 16;
     NOTIFIED_UPDATE_SQUARE_MEMBER_RELATION = 17;
     NOTIFIED_UPDATE_SQUARE_FEATURE_SET = 32;
+    NOTIFIED_UPDATE_SQUARE_NOTE_STATUS = 36;
     NOTIFICATION_JOIN_REQUEST = 21;
     NOTIFICATION_JOINED = 22;
     NOTIFICATION_PROMOTED_COADMIN = 23;
@@ -1133,10 +1180,29 @@ enum SquareChatType {
     SQUARE_DEFAULT = 4;
 }
 
+enum SquareErrorCode {
+    UNKNOWN = 0;
+    INTERNAL_ERROR = 500;
+    NOT_IMPLEMENTED = 501;
+    TRY_AGAIN_LATER = 503;
+    MAINTENANCE = 505;
+    ILLEGAL_ARGUMENT = 400;
+    AUTHENTICATION_FAILURE = 401;
+    FORBIDDEN = 403;
+    NOT_FOUND = 404;
+    REVISION_MISMATCH = 409;
+    PRECONDITION_FAILED = 410;
+}
+
 enum SquareChatState {
     ALIVE = 0;
     DELETED = 1;
     SUSPENDED = 2;
+}
+
+enum SquareFeatureSetAttribute {
+    CREATING_SECRET_SQUARE_CHAT = 1;
+    INVITING_INTO_OPEN_SQUARE_CHAT = 2;
 }
 
 enum SquareMembershipState {
@@ -1147,6 +1213,11 @@ enum SquareMembershipState {
     KICK_OUT = 5;
     BANNED = 6;
     DELETED = 7;
+}
+
+enum SquareChatMemberAttribute {
+    MEMBERSHIP_STATE = 4;
+    NOTIFICATION_MESSAGE = 6;
 }
 
 enum SquareMemberRole {
@@ -1167,6 +1238,31 @@ enum SquareChatMembershipState {
 enum FetchDirection {
     FORWARD = 1;
     BACKWARD = 2;
+}
+
+enum SquareAttribute {
+    NAME = 1;
+    WELCOME_MESSAGE = 2;
+    PROFILE_IMAGE = 3;
+    DESCRIPTION = 4;
+    SEARCHABLE = 6;
+    CATEGORY = 7;
+    INVITATION_URL = 8;
+    ABLE_TO_USE_INVITATION_URL = 9;
+    STATE = 10;
+}
+
+enum SquareAuthorityAttribute {
+    UPDATE_SQUARE_PROFILE = 1;
+    INVITE_NEW_MEMBER = 2;
+    APPROVE_JOIN_REQUEST = 3;
+    CREATE_POST = 4;
+    CREATE_OPEN_SQUARE_CHAT = 5;
+    DELETE_SQUARE_CHAT_OR_POST = 6;
+    REMOVE_SQUARE_MEMBER = 7;
+    GRANT_ROLE = 8;
+    ENABLE_INVITATION_TICKET = 9;
+    CREATE_CHAT_ANNOUNCEMENT = 10;
 }
 
 enum SquareEventStatus {
@@ -1282,7 +1378,7 @@ struct Square {
     9: string invitationURL;
     10: i64 revision;
     11: bool ableToUseInvitationTicket;
-    12: SquareChatState state;
+    12: SquareState state;
 }
 
 struct SquareAuthority {
@@ -1355,6 +1451,19 @@ struct SquareChat {
 struct NoteStatus {
     1: i32 noteCount;
     2: i64 latestCreatedAt;
+}
+
+struct SquareInfo {
+    1: Square square;
+    2: SquareStatus squareStatus;
+    3: NoteStatus squareNoteStatus;
+}
+
+struct BotUseInfo {
+    1: bool botUseAgreementAccepted;
+    2: bool botInFriends;
+    3: string primaryApplication;
+    4: string locale;
 }
 
 struct PaidCallAdCountry {
@@ -1629,6 +1738,16 @@ struct BuddyProfile {
     4: string displayName;
     5: string statusMessage;
     11: i64 contactCount;
+}
+
+struct CommitMessageResult {
+    1: Message message;
+    2: CommitMessageResultCode code;
+    3: string reason;
+    4: i64 successCount;
+    5: i64 failCount;
+    6: i64 unregisterCount;
+    7: i64 blockCount;
 }
 
 struct BuddySearchResult {
@@ -2608,13 +2727,6 @@ struct CreateSquareRequest {
     3: SquareMember creator;
 }
 
-struct DeleteSquareChatResponse {}
-
-struct DeleteSquareChatRequest {
-    1: string squareChatMid;
-    2: i64 revision;
-}
-
 struct DeleteSquareResponse {}
 
 struct DeleteSquareRequest {
@@ -2682,8 +2794,8 @@ struct GetJoinedSquaresResponse {
 
 struct GetJoinableSquareChatsRequest {
     1: string squareMid;
-    2: string continuationToken;
-    3: i32 limit;
+    10: string continuationToken;
+    11: i32 limit;
 }
 
 struct GetJoinableSquareChatsResponse {
@@ -2743,15 +2855,15 @@ struct SearchSquareMembersResponse {
     4: i32 totalCount;
 }
 
+struct FindSquareByInvitationTicketRequest {
+    2: string invitationTicket;
+}
+
 struct FindSquareByInvitationTicketResponse {
     1: Square square;
     2: SquareMember myMembership
     3: SquareAuthority squareAuthority
     4: SquareStatus squareStatus;
-}
-
-struct FindSquareByInvitationTicketRequest {
-    2: string invitationTicket;
 }
 
 struct SquareEventReceiveMessage {
@@ -3059,6 +3171,246 @@ struct Category {
     2: string name;
 }
 
+struct GetSquareCategoriesRequest {
+    
+}
+
+struct GetSquareCategoriesResponse {
+    1: list<Category> categoryList;
+}
+
+struct UpdateSquareRequest {
+    2: set<SquareAttribute> updatedAttrs;
+    3: Square square;
+}
+
+struct UpdateSquareResponse {
+    1: set<SquareAttribute> updatedAttrs;
+    2: Square square;
+}
+
+struct SearchSquaresRequest {
+    2: string query;
+    3: string continuationToken;
+    4: i32 limit;
+}
+
+struct SearchSquaresResponse {
+    1: list<Square> squares;
+    2: map<string, SquareStatus> squareStatuses;
+    3: map<string, SquareMember> myMemberships;
+    4: string continuationToken;
+    5: map<string, NoteStatus> noteStatuses;
+}
+
+struct GetSquareFeatureSetRequest {
+    2: string squareMid;
+}
+
+struct GetSquareFeatureSetResponse {
+    1: SquareFeatureSet squareFeatureSet;
+}
+
+struct UpdateSquareFeatureSetRequest {
+    2: set<SquareFeatureSetAttribute> updateAttributes;
+    3: SquareFeatureSet squareFeatureSet;
+}
+
+struct UpdateSquareFeatureSetResponse {
+    1: set<SquareFeatureSetAttribute> updateAttributes;
+    2: SquareFeatureSet squareFeatureSet;
+}
+
+struct UpdateSquareMemberRequest {
+    2: set<SquareMemberAttribute> updatedAttrs;
+    3: set<SquarePreferenceAttribute> updatedPreferenceAttrs;
+    4: SquareMember squareMember;
+}
+
+struct UpdateSquareMemberResponse {
+    1: set<SquareMemberAttribute> updatedAttrs;
+    2: SquareMember squareMember;
+    3: set<SquarePreferenceAttribute> updatedPreferenceAttrs;
+}
+
+struct UpdateSquareMembersRequest {
+    2: set<SquareMemberAttribute> updatedAttrs;
+    3: list<SquareMember> members;
+}
+
+struct UpdateSquareMembersResponse {
+    1: set<SquareMemberAttribute> updatedAttrs;
+    2: SquareMember editor;
+    3: map<string, SquareMember> members;
+}
+
+struct RejectSquareMembersRequest {
+    2: string squareMid;
+    3: list<string> requestedMemberMids;
+}
+
+struct RejectSquareMembersResponse {
+    1: list<SquareMember> rejectedMembers;
+    2: SquareStatus status;
+}
+
+struct RemoveSubscriptionsRequest {
+    2: list<i64> unsubscriptions;
+}
+
+struct RemoveSubscriptionsResponse {
+    
+}
+
+struct RefreshSubscriptionsRequest {
+    2: list<i64> subscriptions;
+}
+
+struct RefreshSubscriptionsResponse {
+    1: i64 ttlMillis;
+    2: map<i64, SubscriptionState> subscriptionStates;
+}
+
+struct UpdateSquareChatRequest {
+    2: set<SquareChatAttribute> updatedAttrs;
+    3: SquareChat squareChat;
+}
+
+struct UpdateSquareChatResponse {
+    1: set<SquareChatAttribute> updatedAttrs;
+    2: SquareChat squareChat;
+}
+
+struct DeleteSquareChatRequest {
+    2: string squareChatMid;
+    3: i64 revision;
+}
+
+struct DeleteSquareChatResponse {
+    
+}
+
+struct UpdateSquareChatMemberRequest {
+    2: set<SquareChatMemberAttribute> updatedAttrs;
+    3: SquareChatMember chatMember;
+}
+
+struct UpdateSquareChatMemberResponse {
+    1: SquareChatMember updatedChatMember;
+}
+
+struct UpdateSquareAuthorityRequest {
+    2: set<SquareAuthorityAttribute> updateAttributes;
+    3: SquareAuthority authority;
+}
+
+struct UpdateSquareAuthorityResponse {
+    1: set<SquareAuthorityAttribute> updatdAttributes;
+    2: SquareAuthority authority;
+}
+
+struct UpdateSquareMemberRelationRequest {
+    2: string squareMid;
+    3: string targetSquareMemberMid;
+    4: set<SquareMemberRelationAttribute> updatedAttrs;
+    5: SquareMemberRelation relation;
+}
+
+struct UpdateSquareMemberRelationResponse {
+    1: string squareMid;
+    2: string targetSquareMemberMid;
+    3: set<SquareMemberRelationAttribute> updatedAttrs;
+    4: SquareMemberRelation relation;
+}
+
+struct ReportSquareRequest {
+    2: string squareMid;
+    3: ReportType reportType;
+    4: string otherReason;
+}
+
+struct ReportSquareResponse {
+    
+}
+
+struct ReportSquareChatRequest {
+    2: string squareMid;
+    3: string squareChatMid;
+    5: ReportType reportType;
+    6: string otherReason;
+}
+
+struct ReportSquareChatResponse {
+    
+}
+
+struct ReportSquareMessageRequest {
+    2: string squareMid;
+    3: string squareChatMid;
+    4: string squareMessageId;
+    5: ReportType reportType;
+    6: string otherReason;
+}
+
+struct ReportSquareMessageResponse {
+    
+}
+
+struct ReportSquareMemberRequest {
+    2: string squareMemberMid;
+    3: ReportType reportType;
+    4: string otherReason;
+    5: string squareChatMid;
+}
+
+struct ReportSquareMemberResponse {
+    
+}
+
+struct GetSquareStatusRequest {
+    2: string squareMid;
+}
+
+struct GetSquareStatusResponse {
+    1: SquareStatus squareStatus;
+}
+
+struct GetNoteStatusRequest {
+    2: string squareMid;
+}
+
+struct GetNoteStatusResponse {
+    1: string squareMid;
+    2: NoteStatus status;
+}
+
+struct CreateSquareChatAnnouncementRequest {
+    1: i32 reqSeq;
+    2: string squareChatMid;
+    3: SquareChatAnnouncement squareChatAnnouncement;
+}
+
+struct CreateSquareChatAnnouncementResponse {
+    1: SquareChatAnnouncement announcement;
+}
+
+struct DeleteSquareChatAnnouncementRequest {
+    2: string squareChatMid;
+    3: i64 announcementSeq;
+}
+
+struct DeleteSquareChatAnnouncementResponse {
+    
+}
+
+struct GetSquareChatAnnouncementsRequest {
+    2: string squareChatMid;
+}
+
+struct GetSquareChatAnnouncementsResponse {
+    1: list<SquareChatAnnouncement> announcements;
+}
+
 exception TalkException {
     1: ErrorCode code;
     2: string reason;
@@ -3162,7 +3514,42 @@ service AccountSupervisorService {
         2: string virtualMid) throws(1: TalkException e);
 }
 
+service SpotService {
+
+    SpotPhoneNumberResponse lookupByPhoneNumber(
+        2: string countryAreaCode,
+        3: string phoneNumber) throws (1: TalkException e);
+
+    SpotNearbyResponse lookupNearby(
+        2: Location location,
+        3: SpotCategory category,
+        4: string query,
+        5: string countryAreaCode) throws (1: TalkException e);
+
+}
+
+service BotService {
+    void notifyLeaveGroup(
+        1: string groupMid) throws (1: TalkException e);
+
+    void notifyLeaveRoom(
+        1: string roomMid) throws (1: TalkException e);
+    
+    BotUseInfo getBotUseInfo(
+        2: string botMid,
+    ) throws (1: TalkException e)
+    
+    void sendChatCheckedByWatermark(
+        1: i32 seq,
+        2: string mid,
+        3: i64 watermark,
+        4: i8 sessionId,
+    ) throws (1: TalkException e);
+
+}
+
 service AgeCheckService {
+
     UserAgeType checkUserAge(
         2: CarrierCode carrier,
         3: string sessionId,
@@ -3178,9 +3565,11 @@ service AgeCheckService {
 
     AgeCheckRequestResult retrieveRequestToken(
         2: CarrierCode carrier) throws(1: TalkException e);
+
 }
 
 service BuddyManagementService {
+
     void addBuddyMember(
         1: string requestId,
         2: string userMid) throws(1: TalkException e);
@@ -3400,9 +3789,11 @@ service BuddyManagementService {
     string uploadBuddyContent(
         2: ContentType contentType,
         3: binary content) throws(1: TalkException e);
+
 }
 
 service BuddyService {
+
     list<BuddySearchResult> findBuddyContactsByQuery(
         2: string language,
         3: string country,
@@ -3442,9 +3833,11 @@ service BuddyService {
     list<Contact> getPromotedBuddyContacts(
         2: string language,
         3: string country) throws(1: TalkException e);
+
 }
 
 service ChannelApplicationProvidedService {
+
     i64 activeBuddySubscriberCount() throws(1: TalkException e);
 
     void addOperationForChannel(
@@ -3528,13 +3921,13 @@ service ChannelApplicationProvidedService {
     void updateProfileAttributeForChannel(
         2: ProfileAttribute profileAttribute,
         3: string value) throws(1: TalkException e);
+
 }
 
 service ChannelService {
 
     OTPResult issueOTP(
-        2: string channelId,
-    ) throws (1: ChannelException e);
+        2: string channelId) throws (1: ChannelException e);
 
     ChannelToken approveChannelAndIssueChannelToken(
         1: string channelId) throws(1: ChannelException e);
@@ -3572,8 +3965,7 @@ service ChannelService {
         1: list<string> channelIds) throws(1: ChannelException e);
 
     bool updateChannelSettings(
-        1: ChannelSettings channelSettings,
-    ) throws (1: ChannelException e)
+        1: ChannelSettings channelSettings) throws (1: ChannelException e)
 
     ChannelDomains getCommonDomains(
         1: i64 lastSynced) throws (1: ChannelException e);
@@ -3615,9 +4007,11 @@ service ChannelService {
 
     void updateChannelNotificationSetting(
         1: list<ChannelNotificationSetting> setting) throws(1: ChannelException e);
+
 }
 
 service MessageService {
+
     MessageOperations fetchMessageOperations(
         2: i64 localRevision,
         3: i64 lastOpTimestamp,
@@ -3628,9 +4022,11 @@ service MessageService {
 
     list<LastReadMessageIds> multiGetLastReadMessageIds(
         2: list<string> chatIds) throws(1: TalkException e);
+
 }
 
 service ShopService {
+
     void buyCoinProduct(
         2: PaymentReservation paymentReservation) throws(1: TalkException e);
 
@@ -3980,6 +4376,12 @@ service TalkService {
         3: i64 expirationTime,
         4: i32 maxUseCount) throws(1: TalkException e);
 
+    void destroyMessage(
+        1: i32 seq,
+        2: string chatId,
+        3: string messageId,
+        4: i8 sessionId) throws (1: TalkException e);
+
     set<string> getAcceptedProximityMatches(
         2: string sessionId) throws(1: TalkException e);
 
@@ -4007,7 +4409,7 @@ service TalkService {
     void reportClientStatistics(
         1: i32 reqSeq,
         2: ReportCategory category,
-        3: i32 count) throws (1: TalkException e)
+        3: i32 count) throws (1: TalkException e);
 
     string verifyPhoneNumberForLogin(
         2: string verifierFromPhone,
@@ -4048,6 +4450,9 @@ service TalkService {
     list<Contact> getContacts(
         2: list<string> ids) throws(1: TalkException e);
 
+    Contact getContactWithFriendRequestStatus(
+        2: string id) throws (1: TalkException e);
+
     string getCountryWithRequestIp() throws(1: TalkException e);
 
     list<string> getFavoriteMids() throws(1: TalkException e);
@@ -4069,6 +4474,13 @@ service TalkService {
     i32 getLastAnnouncementIndex() throws(1: TalkException e);
 
     i64 getLastOpRevision() throws(1: TalkException e);
+
+    SuggestDictionaryRevisions getSuggestRevisions() throws (1: TalkException e);
+
+    list<Message> getPreviousMessagesV2WithReadCount(
+        2: string messageBoxId,
+        3: MessageBoxV2MessageId endMessageId,
+        4: i32 messagesCount) throws (1: TalkException e);
 
     TMessageBox getMessageBox(
         2: string channelId,
@@ -4142,6 +4554,9 @@ service TalkService {
     list<LoginSession> getSessions() throws(1: TalkException e);
 
     Settings getSettings() throws(1: TalkException e);
+
+    list<Group> getGroupsV2(
+        2: list<string> groupIds) throws (1: TalkException e);
 
     Settings getSettingsAttributes(
         2: i32 attrBitset) throws(1: TalkException e);
@@ -4248,11 +4663,11 @@ service TalkService {
 
     void notifyInstalled(
         2: string udidHash,
-        3: string applicationTypeWithExtensions);
+        3: string applicationTypeWithExtensions) throws(1: TalkException e);
 
     void notifyRegistrationComplete(
         2: string udidHash,
-        3: string applicationTypeWithExtensions);
+        3: string applicationTypeWithExtensions) throws(1: TalkException e);
 
     void notifySleep(
         2: i64 lastRev,
@@ -4294,7 +4709,8 @@ service TalkService {
         5: IdentityProvider provider,
         6: string identifier,
         7: string verifier,
-        8: string mid) throws(1: TalkException e);
+        8: string mid,
+        9: string migrationPincodeSessionId) throws(1: TalkException e);
 
     bool registerUserid(
         1: i32 reqSeq,
@@ -4354,6 +4770,9 @@ service TalkService {
     bool removeMessage(
         2: string messageId) throws(1: TalkException e);
 
+    ContactTransition makeUserAddMyselfAsContact(
+        1: string contactOwnerMid) throws (1: TalkException e);
+
     bool removeMessageFromMyHome(
         2: string messageId) throws(1: TalkException e);
 
@@ -4383,9 +4802,22 @@ service TalkService {
         2: i64 syncOpRevision,
         3: list<Room> rooms) throws(1: TalkException e);
 
+    Contact findAndAddContactByMetaTag(
+        1: i32 reqSeq,
+        2: string userid,
+        3: string reference) throws (1: TalkException e);
+
     void reportSettings(
         2: i64 syncOpRevision,
         3: Settings settings) throws(1: TalkException e);
+
+    void reportSpam(
+        2: string chatMid,
+        3: list<string> memberMids,
+        4: list<SpammerReason> spammerReasons,
+        5: list<string> senderMids,
+        6: list<string> spamMessageIds,
+        7: list<string> spamMessages) throws (1: TalkException e);
 
     void reportSpammer(
         2: string spammerMid,
@@ -4417,6 +4849,10 @@ service TalkService {
         1: i32 seq,
         2: string consumer,
         3: string lastMessageId) throws(1: TalkException e);
+
+    CommitMessageResult sendMessageAwaitCommit(
+        1: i32 seq,
+        2: Message message) throws (1: TalkException e);
 
     void sendChatRemoved(
         1: i32 seq,
@@ -4463,6 +4899,9 @@ service TalkService {
 
     list<E2EEPublicKey> getE2EEPublicKeysEx(
         2: bool ignoreE2EEStatus) throws (1: TalkException e);
+
+    list<Operation> getReadMessageOpsInBulk(
+        2: list<string> chatIds) throws (1: TalkException e);
 
     Message sendEvent(
         1: i32 seq,
@@ -4552,6 +4991,26 @@ service TalkService {
     Message trySendMessage(
         1: i32 seq,
         2: Message message) throws(1: TalkException e);
+
+    list<Message> getNextMessagesV2(
+        2: string messageBoxId,
+        3: MessageBoxV2MessageId startMessageId,
+        4: i32 messagesCount) throws (1: TalkException e);
+
+    TMessageBoxWrapUp getMessageBoxCompactWrapUpV2(
+        2: string messageBoxId) throws (1: TalkException e);
+
+    list<Message> getRecentMessagesV2(
+        2: string messageBoxId,
+        3: i32 messagesCount) throws (1: TalkException e);
+
+    map<string, string> validateContactsOnBot(
+        2: list<string> contacts) throws (1: TalkException e);
+
+    void tryFriendRequest(
+        1: string midOrEMid,
+        2: FriendRequestMethod method,
+        3: string friendRequestParams) throws (1: TalkException e);
 
     void unblockContact(
         1: i32 reqSeq,
@@ -4923,7 +5382,88 @@ service AuthService {
 
 }
 
+struct GetJoinedSquareChatsRequest {
+    2: string continuationToken;
+    3: i32 limit;
+}
+
+struct GetJoinedSquareChatsResponse {
+    1: list<SquareChat> chats;
+    2: map<string, SquareChatMember> chatMembers;
+    3: map<string, SquareChatStatus> statuses;
+    4: string continuationToken;
+}
+
 service SquareService {
+
+    GetSquareChatAnnouncementsResponse getSquareChatAnnouncements(
+        1: GetSquareChatAnnouncementsRequest request) throws(1: SquareException e);
+
+    DeleteSquareChatAnnouncementResponse deleteSquareChatAnnouncement(
+        1: DeleteSquareChatAnnouncementRequest request) throws(1: SquareException e);
+
+    CreateSquareChatAnnouncementResponse createSquareChatAnnouncement(
+        1: CreateSquareChatAnnouncementRequest request) throws(1: SquareException e);
+
+    GetNoteStatusResponse getNoteStatus(
+        1: GetNoteStatusRequest request) throws(1: SquareException e);
+
+    GetSquareStatusResponse getSquareStatus(
+        1: GetSquareStatusRequest request) throws(1: SquareException e);
+
+    ReportSquareMemberResponse reportSquareMember(
+        1: ReportSquareMemberRequest request) throws(1: SquareException e);
+
+    ReportSquareMessageResponse reportSquareMessage(
+        1: ReportSquareMessageRequest request) throws(1: SquareException e);
+
+    ReportSquareChatResponse reportSquareChat(
+        1: ReportSquareChatRequest request) throws(1: SquareException e);
+
+    ReportSquareResponse reportSquare(
+        1: ReportSquareRequest request) throws(1: SquareException e);
+
+    UpdateSquareMemberRelationResponse updateSquareMemberRelation(
+        1: UpdateSquareMemberRelationRequest request) throws(1: SquareException e);
+
+    UpdateSquareAuthorityResponse updateSquareAuthority(
+        1: UpdateSquareAuthorityRequest request) throws(1: SquareException e);
+
+    UpdateSquareChatMemberResponse updateSquareChatMember(
+        1: UpdateSquareChatMemberRequest request) throws(1: SquareException e);
+
+    UpdateSquareChatResponse updateSquareChat(
+        1: UpdateSquareChatRequest request) throws(1: SquareException e);
+
+    RefreshSubscriptionsResponse refreshSubscriptions(
+        1: RefreshSubscriptionsRequest request) throws(1: SquareException e);
+
+    RemoveSubscriptionsResponse removeSubscriptions(
+        1: RemoveSubscriptionsRequest request) throws(1: SquareException e);
+
+    RejectSquareMembersResponse rejectSquareMembers(
+        1: RejectSquareMembersRequest request) throws(1: SquareException e);
+
+    UpdateSquareMembersResponse updateSquareMembers(
+        1: UpdateSquareMembersRequest request) throws(1: SquareException e);
+
+    UpdateSquareMemberResponse updateSquareMember(
+        1: UpdateSquareMemberRequest request) throws(1: SquareException e);
+
+    UpdateSquareFeatureSetResponse updateSquareFeatureSet(
+        1: UpdateSquareFeatureSetRequest request) throws(1: SquareException e);
+
+    GetSquareFeatureSetResponse getSquareFeatureSet(
+        1: GetSquareFeatureSetRequest request) throws(1: SquareException e);
+
+    SearchSquaresResponse searchSquares(
+        1: SearchSquaresRequest request) throws(1: SquareException e);
+
+    UpdateSquareResponse updateSquare(
+        1: UpdateSquareRequest request) throws(1: SquareException e);
+
+    GetSquareCategoriesResponse getCategories(
+        1: GetSquareCategoriesRequest request) throws(1: SquareException e);
 
     SearchSquareMembersResponse searchSquareMembers(
         1: SearchSquareMembersRequest request) throws(1: SquareException e);
@@ -4987,6 +5527,9 @@ service SquareService {
 
     GetJoinedSquaresResponse getJoinedSquares(
         1: GetJoinedSquaresRequest request) throws(1: SquareException e);
+
+    GetJoinedSquareChatsResponse getJoinedSquareChats(
+        1: GetJoinedSquareChatsRequest request) throws(1: SquareException e);
 
     ApproveSquareMembersResponse approveSquareMembers(
         1: ApproveSquareMembersRequest request) throws(1: SquareException e);
