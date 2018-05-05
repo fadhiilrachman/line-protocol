@@ -1,5 +1,5 @@
 # ![logo](/assets/LINE-sm.png) LINE Protocol
- [![LICENSE](https://img.shields.io/badge/license-GPL%203.0-blue.svg "LICENSE")](https://github.com/fadhiilrachman/line-protocol/blob/master/LICENSE) [![Chat on Discord](https://img.shields.io/badge/chat-on%20discord-7289da.svg "Chat on Discord")](https://discord.gg/JAA2uk6)
+ [![LICENSE](https://img.shields.io/badge/license-GPL%203.0-blue.svg "LICENSE")](https://github.com/fadhiilrachman/line-protocol/blob/master/LICENSE) [![Chat on Discord](https://discordapp.com/api/guilds/370888828489170956/widget.png "Chat on Discord")](https://discord.gg/JAA2uk6)
 
 *LINE Messaging's private protocol*
 
